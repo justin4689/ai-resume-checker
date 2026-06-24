@@ -1,7 +1,12 @@
 const { Router } = require('express');
-const router = Router();
+const requireAuth = require('../middleware/auth.middleware');
+const { insights, versions, history } = require('../controllers/analytics.controller');
 
-// TODO: implement analytics routes
-router.get('/ping', (req, res) => res.json({ ok: true, route: 'analytics' }));
+const router = Router();
+router.use(requireAuth);
+
+router.get('/insights', insights);
+router.get('/versions', versions);
+router.get('/history', history);
 
 module.exports = router;

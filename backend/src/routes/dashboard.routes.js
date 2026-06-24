@@ -1,7 +1,10 @@
 const { Router } = require('express');
-const router = Router();
+const requireAuth = require('../middleware/auth.middleware');
+const { getDashboard } = require('../controllers/dashboard.controller');
 
-// TODO: implement dashboard routes
-router.get('/ping', (req, res) => res.json({ ok: true, route: 'dashboard' }));
+const router = Router();
+router.use(requireAuth);
+
+router.get('/', getDashboard);
 
 module.exports = router;
