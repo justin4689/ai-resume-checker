@@ -1,33 +1,7 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-
-const COOKIE_NAME = 'auth_token';
-const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
-
-function signToken(userId) {
-  return jwt.sign({ userId }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN || '7d',
-  });
-}
-
-function setAuthCookie(res, token) {
-  res.cookie(COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: COOKIE_MAX_AGE,
-  });
-}
-
-function formatUser(user) {
-  return {
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    createdAt: user.createdAt,
-  };
-}
+const { signToken, setAuthCookie, clearAuthCookie } = require('../utils/token');
+const { formatUser } = require('../utils/format');
 
 // POST /api/auth/register
 async function register(req, res, next) {
@@ -41,8 +15,7 @@ async function register(req, res, next) {
 
     const passwordHash = await bcrypt.hash(password, 12);
     const user = await User.create({ name, email, passwordHash });
-    const token = signToken(user._id);
-    setAuthCookie(res, token);
+    setAuthCookie(res, signToken(user._id));
     res.status(201).json({ user: formatUser(user) });
   } catch (err) {
     next(err);
@@ -62,8 +35,7 @@ async function login(req, res, next) {
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
 
-    const token = signToken(user._id);
-    setAuthCookie(res, token);
+    setAuthCookie(res, signToken(user._id));
     res.json({ user: formatUser(user) });
   } catch (err) {
     next(err);
@@ -72,11 +44,7 @@ async function login(req, res, next) {
 
 // POST /api/auth/logout
 function logout(req, res) {
-  res.clearCookie(COOKIE_NAME, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-  });
+  clearAuthCookie(res);
   res.json({ ok: true });
 }
 
