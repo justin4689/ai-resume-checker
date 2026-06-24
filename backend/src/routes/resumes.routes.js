@@ -1,7 +1,23 @@
 const { Router } = require('express');
-const router = Router();
+const requireAuth = require('../middleware/auth.middleware');
+const uploadMiddleware = require('../middleware/upload.middleware');
+const {
+  list,
+  get,
+  getVersion,
+  upload,
+  remove,
+  diff,
+} = require('../controllers/resumes.controller');
 
-// TODO: implement resume routes
-router.get('/ping', (req, res) => res.json({ ok: true, route: 'resumes' }));
+const router = Router();
+router.use(requireAuth);
+
+router.get('/', list);
+router.post('/', uploadMiddleware.single('file'), upload);
+router.get('/:id', get);
+router.delete('/:id', remove);
+router.get('/:id/versions/:versionId', getVersion);
+router.get('/:id/diff', diff);
 
 module.exports = router;
