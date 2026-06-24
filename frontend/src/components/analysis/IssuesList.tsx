@@ -49,9 +49,6 @@ function IssueItem({ issue }: { issue: Issue }) {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="text-xs text-[var(--ink-muted)] mt-2">
-                  {issue.explanation}
-                </div>
                 {issue.fix && (
                   <div className="mt-2 text-xs rounded-xl bg-[var(--accent-soft)] text-[var(--accent-strong)] px-3 py-2">
                     <strong className="font-semibold">Fix:</strong> {issue.fix}

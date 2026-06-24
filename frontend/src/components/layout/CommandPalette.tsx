@@ -77,8 +77,8 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       id: `resume:${r._id}`,
       kind: "resume" as const,
       label: r.title,
-      hint: `Updated ${relativeTime(r.updatedAt)} · ${r.latestVersionNumber || 1} version${
-        (r.latestVersionNumber || 1) > 1 ? "s" : ""
+      hint: `Updated ${relativeTime(r.updatedAt)} · ${r.versionCount || 1} version${
+        (r.versionCount || 1) > 1 ? "s" : ""
       }`,
       to: `/resumes/${r._id}`,
       icon: FileText,

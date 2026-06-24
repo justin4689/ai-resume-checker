@@ -38,11 +38,11 @@ export default function ResumeDetail() {
 
   const activeVersion = useMemo(() => versions.find((v) => v._id === activeVersionId), [versions, activeVersionId]);
 
-  const analysisQuery = useAnalysisForVersion(id, activeVersionId);
+  const analysisQuery = useAnalysisForVersion(id, activeVersionId ?? undefined);
   const analysis = analysisQuery.data;
 
-  const analyze = useAnalyzeResume(id);
-  const applyRewrites = useApplyRewrites(id);
+  const analyze = useAnalyzeResume(id ?? "");
+  const applyRewrites = useApplyRewrites(id ?? "");
   const [targetRole, setTargetRole] = useState("");
   const [tab, setTab] = useState("score");
 

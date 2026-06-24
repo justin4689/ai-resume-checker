@@ -1,3 +1,4 @@
+import React from "react";
 import { motion } from "framer-motion";
 import { Upload, Cpu, FileDown, ArrowRight, Check, Sparkles, type LucideIcon } from "lucide-react";
 import { SectionHeader } from "./FeaturesSection";
@@ -85,7 +86,7 @@ function DownloadVisual() {
   );
 }
 
-interface Step { n: string; icon: LucideIcon; title: string; desc: string; Visual: () => JSX.Element }
+interface Step { n: string; icon: LucideIcon; title: string; desc: string; Visual: () => React.ReactElement }
 
 const STEPS: Step[] = [
   { n: "01", icon: Upload, title: "Upload your resume", desc: "Drop a PDF or DOCX. We parse it in seconds — no signup wall, no nonsense.", Visual: UploadVisual },

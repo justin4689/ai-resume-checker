@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { cn } from "@/lib/utils";
 import { useDiff } from "@/hooks/useResumes";
-import type { ResumeVersion } from "@/types";
+import type { ResumeVersion, DiffHunk } from "@/types";
 
 type Palette = "sage" | "danger";
 
@@ -95,7 +95,7 @@ function ModeToggle({ mode, onChange }: { mode: string; onChange: (mode: string)
 }
 
 interface DiffViewProps {
-  resumeId: string;
+  resumeId: string | undefined;
   versions: Pick<ResumeVersion, "_id" | "label">[];
 }
 
@@ -126,7 +126,10 @@ export function DiffView({ resumeId, versions }: DiffViewProps) {
 
   const fromLabel = versions.find((v) => v._id === fromId)?.label || "—";
   const toLabel = versions.find((v) => v._id === toId)?.label || "—";
-  const net = data ? (data as { stats: { added: number; removed: number } }).stats.added - (data as { stats: { added: number; removed: number } }).stats.removed : 0;
+  const hunks: DiffHunk[] = data?.hunks ?? [];
+  const added = hunks.filter((h) => h.type === "add").reduce((s, h) => s + h.text.length, 0);
+  const removed = hunks.filter((h) => h.type === "remove").reduce((s, h) => s + h.text.length, 0);
+  const net = added - removed;
 
   return (
     <Card>
@@ -179,9 +182,7 @@ export function DiffView({ resumeId, versions }: DiffViewProps) {
         </div>
       )}
 
-      {data && (() => {
-        const diffData = data as { stats: { added: number; removed: number }; parts: { value: string; added?: boolean; removed?: boolean }[] };
-        return (
+      {data && (
           <>
             {/* Hero stats */}
             <div
@@ -216,7 +217,7 @@ export function DiffView({ resumeId, versions }: DiffViewProps) {
                     Added
                   </div>
                   <div className="flex items-baseline gap-1.5 mt-1.5">
-                    <GradientNumber value={`+${diffData.stats.added}`} size={40} />
+                    <GradientNumber value={`+${added}`} size={40} />
                     <span className="text-[11px] text-[var(--ink-muted)]">
                       chars
                     </span>
@@ -229,7 +230,7 @@ export function DiffView({ resumeId, versions }: DiffViewProps) {
                   </div>
                   <div className="flex items-baseline gap-1.5 mt-1.5">
                     <GradientNumber
-                      value={`−${diffData.stats.removed}`}
+                      value={`−${removed}`}
                       size={40}
                       palette="danger"
                     />
@@ -297,25 +298,24 @@ export function DiffView({ resumeId, versions }: DiffViewProps) {
                 </div>
               </div>
               <div className="p-5 max-h-[600px] overflow-auto font-mono text-[13px] leading-[1.75] whitespace-pre-wrap text-[var(--ink-muted)]">
-                {diffData.parts.map((p, i) => (
+                {hunks.map((h, i) => (
                   <span
                     key={i}
                     className={cn(
-                      !p.added && !p.removed && "text-[var(--ink)]",
-                      p.added &&
+                      h.type === "context" && "text-[var(--ink)]",
+                      h.type === "add" &&
                         "bg-[var(--accent-soft)] text-[var(--accent-strong)] font-medium rounded px-0.5 py-0.5",
-                      p.removed &&
+                      h.type === "remove" &&
                         "bg-[#F8E3E0] text-[var(--danger)] line-through decoration-[var(--danger)]/50 rounded px-0.5 py-0.5"
                     )}
                   >
-                    {p.value}
+                    {h.text}{" "}
                   </span>
                 ))}
               </div>
             </div>
           </>
-        );
-      })()}
+      )}
     </Card>
   );
 }

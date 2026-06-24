@@ -30,7 +30,7 @@ export default function Export() {
     }
   }, [versions, resume, activeVersionId]);
 
-  const fullVersion = useFullVersion(id, activeVersionId);
+  const fullVersion = useFullVersion(id, activeVersionId ?? undefined);
   const version = fullVersion.data;
 
   const docProps = useMemo(() => ({ user, version, title: resume?.title }), [user, version, resume?.title]);

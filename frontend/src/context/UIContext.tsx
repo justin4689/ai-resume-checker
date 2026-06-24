@@ -62,7 +62,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const toastBase = useCallback(
-    ({ title, description, variant = "info" as ToastVariant, duration = 4200 } = {}): number => {
+    ({ title, description, variant = "info" as ToastVariant, duration = 4200 }: { title?: string; description?: string; variant?: ToastVariant; duration?: number } = {}): number => {
       const id = nextId();
       setToasts((prev) => [...prev, { id, title, description, variant }]);
       if (duration > 0) {

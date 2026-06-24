@@ -19,7 +19,9 @@ export default function Insights() {
 
   if (error) return <EmptyState icon={BarChart3} title="Couldn't load insights" description={(error as Error).message} />;
 
-  if (data?.empty) {
+  if (!data) return null;
+
+  if (data.totalAnalyses === 0) {
     return (
       <div className="space-y-6">
         <PageHeader title="Insights" description="Patterns across all your resumes and analyses." />

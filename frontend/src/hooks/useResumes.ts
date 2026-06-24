@@ -58,7 +58,7 @@ export function useUploadResume() {
   return useMutation({
     mutationFn: ({ file, title }: { file: File; title?: string }) =>
       resumesApi.upload(file, title),
-    onSuccess: (data: { resume?: { title?: string } }) => {
+    onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: resumeKeys.list() });
       qc.invalidateQueries({ queryKey: dashboardKey });
       toast.success(
@@ -75,7 +75,7 @@ export function useAnalyzeResume(id: string) {
   const toast = useToast();
   return useMutation({
     mutationFn: (body: Record<string, unknown>) => resumesApi.analyze(id, body),
-    onSuccess: (data: { analysis?: { versionId?: string; atsScore?: number } }) => {
+    onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: resumeKeys.detail(id) });
       qc.invalidateQueries({ queryKey: resumeKeys.analyses(id) });
       qc.invalidateQueries({ queryKey: dashboardKey });
@@ -98,7 +98,7 @@ export function useApplyRewrites(id: string) {
   const toast = useToast();
   return useMutation({
     mutationFn: (body: Record<string, unknown>) => resumesApi.rewrite(id, body),
-    onSuccess: (data: { appliedCount?: number; version?: { label?: string } }) => {
+    onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: resumeKeys.detail(id) });
       qc.invalidateQueries({ queryKey: resumeKeys.list() });
       qc.invalidateQueries({ queryKey: dashboardKey });

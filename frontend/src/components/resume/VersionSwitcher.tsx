@@ -3,7 +3,7 @@ import type { ResumeVersion } from "@/types";
 
 interface VersionSwitcherProps {
   versions: Pick<ResumeVersion, "_id" | "label">[];
-  activeId: string;
+  activeId: string | null | undefined;
   onChange: (id: string) => void;
 }
 

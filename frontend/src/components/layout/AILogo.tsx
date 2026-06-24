@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-const AILogo = () => {
+const AILogo = (_props: { size?: number }) => {
   return (
     <div
       className="relative h-12 w-12 flex items-center justify-center"

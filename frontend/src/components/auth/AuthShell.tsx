@@ -1,4 +1,4 @@
-import type { ReactNode, ElementType } from "react";
+import type { ReactNode, ReactElement, ElementType } from "react";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { BrandCardMarquee } from "./BrandCardMarquee";
@@ -8,7 +8,7 @@ const NOISE_DATA_URI =
 
 interface AuthShellProps {
   children: ReactNode;
-  headline: string;
+  headline: ReactNode;
   subhead: string;
 }
 
@@ -27,7 +27,7 @@ export function AuthShell({ children, headline, subhead }: AuthShellProps) {
 }
 
 interface BrandPanelProps {
-  headline: string;
+  headline: ReactNode;
   subhead: string;
 }
 
@@ -192,21 +192,25 @@ export function AuthField({
   );
 }
 
-interface AuthPrimaryButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface AuthPrimaryButtonProps {
   children: ReactNode;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export function AuthPrimaryButton({ children, disabled, ...props }: AuthPrimaryButtonProps) {
+export function AuthPrimaryButton({ children, disabled, type = "button", onClick }: AuthPrimaryButtonProps) {
   return (
     <motion.button
       whileTap={{ scale: 0.985 }}
+      type={type}
       disabled={disabled}
+      onClick={onClick}
       className="relative w-full h-12 rounded-2xl text-white font-semibold text-[15px] flex items-center justify-center gap-2 overflow-hidden shadow-[0_8px_24px_-8px_rgba(47,74,58,0.55)] transition-all duration-200 hover:shadow-[0_12px_28px_-8px_rgba(47,74,58,0.7)] disabled:opacity-60 disabled:cursor-not-allowed"
       style={{
         background:
           "linear-gradient(135deg, #5B7C6A 0%, #3A5C49 50%, #2F4A3A 100%)",
       }}
-      {...props}
     >
       {/* Soft sheen on top */}
       <div

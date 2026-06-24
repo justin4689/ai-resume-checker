@@ -4,10 +4,10 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { relativeTime } from "@/lib/utils";
 import { useDeleteResume } from "@/hooks/useResumes";
-import type { Resume } from "@/types";
+import type { ResumeShallow } from "@/types";
 
 interface ResumeRowProps {
-  resume: Resume;
+  resume: ResumeShallow;
 }
 
 export function ResumeRow({ resume }: ResumeRowProps) {
@@ -40,7 +40,7 @@ export function ResumeRow({ resume }: ResumeRowProps) {
 
       <Badge tone="neutral" className="gap-1">
         <Layers size={11} />
-        {resume.latestVersionNumber || 1} version{(resume.latestVersionNumber || 1) > 1 ? "s" : ""}
+        {resume.versionCount || 1} version{(resume.versionCount || 1) > 1 ? "s" : ""}
       </Badge>
 
       <button
