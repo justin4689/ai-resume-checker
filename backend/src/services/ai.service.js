@@ -57,7 +57,8 @@ async function analyzeResume(rawText) {
     config: { responseMimeType: 'application/json' },
   });
 
-  const parsed = JSON.parse(response.text);
+  const raw = response.text.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/,'').trim();
+  const parsed = JSON.parse(raw);
   return { ...parsed, model: MODEL };
 }
 

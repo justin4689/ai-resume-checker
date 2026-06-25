@@ -18,7 +18,7 @@ export const resumesApi = {
     return api.post<{ resume: Partial<Resume> }>('/resumes', form);
   },
 
-  remove: (id?: string) =>
+  remove: (id: string) =>
     api.delete<{ ok: boolean }>(`/resumes/${id}`),
 
   analyze: (id: string, body: Record<string, unknown>) =>

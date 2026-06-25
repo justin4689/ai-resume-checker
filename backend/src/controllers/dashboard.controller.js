@@ -47,7 +47,7 @@ async function getDashboard(req, res, next) {
     const kpi = {
       atsScore: {
         value: lastAnalysis?.atsScore ?? 0,
-        delta: firstAnalysis && lastAnalysis ? lastAnalysis.atsScore - firstAnalysis.atsScore : 0,
+        delta: lastAnalysis && prevAnalysis ? lastAnalysis.atsScore - prevAnalysis.atsScore : 0,
         spark: spark7((a) => ({ v: a.atsScore })),
       },
       versions: {

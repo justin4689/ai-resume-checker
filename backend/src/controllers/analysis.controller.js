@@ -117,6 +117,10 @@ async function rewrite(req, res, next) {
       ? analysis.bulletRewrites.filter((br) => rewriteIds.includes(br._id.toString()))
       : analysis.bulletRewrites;
 
+    if (!selected.length) {
+      return res.status(400).json({ error: 'No matching rewrites found for the provided IDs' });
+    }
+
     // Apply each rewrite to the raw text
     let newRawText = sourceVersion.rawText;
     for (const br of selected) {
